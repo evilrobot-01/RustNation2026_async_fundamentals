@@ -1,12 +1,12 @@
-use std::sync::atomic::{AtomicU32, AtomicUsize};
-use arr_macro::arr;
 use crate::gui::MyApp;
+use arr_macro::arr;
+use std::sync::atomic::{AtomicU32, AtomicUsize};
 
-mod producer;
-mod reporter;
+mod gui;
 mod processor_level1;
 mod processor_level2;
-mod gui;
+mod producer;
+mod reporter;
 
 const PRODUCER_CHANNEL_SIZE: usize = 500_000;
 const BATCH_CHANNEL_SIZE: usize = 500_000;
@@ -85,8 +85,6 @@ async fn main() {
     let _ = eframe::run_native(
         "Channel Data-Flow Visualizer",
         options,
-        Box::new(|_cc| {
-            Ok(Box::<MyApp>::default())
-        }),
+        Box::new(|_cc| Ok(Box::<MyApp>::default())),
     );
 }

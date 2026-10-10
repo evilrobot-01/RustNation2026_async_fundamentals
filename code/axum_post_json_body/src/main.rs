@@ -1,4 +1,4 @@
-use axum::{http::StatusCode, Json, Router};
+use axum::{Json, Router, http::StatusCode};
 
 #[tokio::main]
 async fn main() {
@@ -24,9 +24,7 @@ async fn hello_json() -> axum::Json<HelloJson> {
     axum::Json(response)
 }
 
-async fn receive_json(
-    Json(payload): Json<HelloJson>,
-) -> StatusCode {
+async fn receive_json(Json(payload): Json<HelloJson>) -> StatusCode {
     println!("Received payload: {:?}", payload);
     StatusCode::OK
 }

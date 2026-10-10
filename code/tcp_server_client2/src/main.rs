@@ -15,7 +15,9 @@ async fn main() {
 }
 
 async fn server() {
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3001").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3001")
+        .await
+        .unwrap();
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         tokio::spawn(async move {
@@ -31,7 +33,9 @@ async fn server() {
 }
 
 async fn client() {
-    let mut socket = tokio::net::TcpStream::connect("127.0.0.1:3001").await.unwrap();
+    let mut socket = tokio::net::TcpStream::connect("127.0.0.1:3001")
+        .await
+        .unwrap();
     socket.write_all(b"Hello, world!").await.unwrap();
     let mut buf = [0; 1024];
     let n = socket.read(&mut buf).await.unwrap();

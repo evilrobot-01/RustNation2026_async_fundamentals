@@ -10,7 +10,9 @@ async fn main() {
 }
 
 async fn server() {
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3001").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3001")
+        .await
+        .unwrap();
     loop {
         let (mut socket, _) = listener.accept().await.unwrap();
         tokio::spawn(async move {
@@ -25,10 +27,7 @@ async fn server() {
                 match command.as_str() {
                     "calculate" => {
                         tokio::time::sleep(std::time::Duration::from_secs_f32(0.25)).await;
-                        socket
-                            .write_all(b"Calculation complete!\n")
-                            .await
-                            .unwrap();
+                        socket.write_all(b"Calculation complete!\n").await.unwrap();
                     }
                     "hello" => {
                         socket.write_all(b"Hello to you too!\n").await.unwrap();
@@ -41,7 +40,9 @@ async fn server() {
 }
 
 async fn client() {
-    let mut socket = tokio::net::TcpStream::connect("127.0.0.1:3001").await.unwrap();
+    let mut socket = tokio::net::TcpStream::connect("127.0.0.1:3001")
+        .await
+        .unwrap();
     socket.write_all(b"calculate").await.unwrap();
     let mut buf = [0; 1024];
     let n = socket.read(&mut buf).await.unwrap();
@@ -49,5 +50,5 @@ async fn client() {
 
     socket.write_all(b"hello").await.unwrap();
     let n = socket.read(&mut buf).await.unwrap();
-    println!("Received: {}", String::from_utf8_lossy(&buf[..n]));    
+    println!("Received: {}", String::from_utf8_lossy(&buf[..n]));
 }

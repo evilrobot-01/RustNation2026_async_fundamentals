@@ -1,4 +1,4 @@
-use axum::{http::StatusCode, Extension, Json, Router};
+use axum::{Extension, Json, Router, http::StatusCode};
 use shared_state_actor::SharedStateCommand;
 use tokio::sync::mpsc::Sender;
 
@@ -36,9 +36,7 @@ async fn hello_json(
     axum::Json(reply)
 }
 
-async fn receive_json(
-    Json(payload): Json<HelloJson>,
-) -> StatusCode {
+async fn receive_json(Json(payload): Json<HelloJson>) -> StatusCode {
     println!("Received payload: {:?}", payload);
     StatusCode::OK
 }

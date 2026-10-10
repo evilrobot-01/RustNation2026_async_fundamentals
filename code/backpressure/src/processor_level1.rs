@@ -1,5 +1,5 @@
-use flume::Receiver;
 use crate::BATCH_SIZE;
+use flume::Receiver;
 
 pub async fn processor_1(
     id: usize,
@@ -25,7 +25,9 @@ pub async fn processor_1(
         let elapsed_seconds = start.elapsed().as_secs_f32();
         if elapsed_seconds >= 0.25 {
             let messages_per_second = count as f32 / elapsed_seconds;
-            let _ = report.send_async(crate::reporter::Report::Layer1(id, messages_per_second)).await;
+            let _ = report
+                .send_async(crate::reporter::Report::Layer1(id, messages_per_second))
+                .await;
             count = 0;
             start = std::time::Instant::now();
         }

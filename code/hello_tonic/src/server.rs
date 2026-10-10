@@ -7,7 +7,6 @@ pub mod hello_world {
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
 
-
 #[derive(Debug, Default)]
 pub struct MyGreeter {}
 

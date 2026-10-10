@@ -21,7 +21,9 @@ async fn run_async_sleep(label: &str) {
 
 async fn run_spawn_blocking(label: &str) {
     let start = Instant::now();
-    let tasks: Vec<_> = (0..3).map(|n| looper_with_spawn_blocking(n, start, label)).collect();
+    let tasks: Vec<_> = (0..3)
+        .map(|n| looper_with_spawn_blocking(n, start, label))
+        .collect();
     join_all(tasks).await;
 }
 

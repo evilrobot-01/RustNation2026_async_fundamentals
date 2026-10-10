@@ -9,7 +9,7 @@ pub enum SharedStateCommand {
 }
 
 /// Starts a new shared state actor and returns a sender to communicate with it.
-/// 
+///
 /// This function spawns a background task that maintains a counter state and processes
 /// commands sent through the returned sender. The actor processes commands sequentially,
 /// ensuring thread-safe access to the shared state.
@@ -69,7 +69,7 @@ pub async fn increment_counter(sender: &tokio::sync::mpsc::Sender<SharedStateCom
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tokio::time::{sleep, Duration};
+    use tokio::time::{Duration, sleep};
 
     #[tokio::test]
     async fn test_actor_starts_with_zero() {
@@ -81,7 +81,7 @@ mod tests {
     #[tokio::test]
     async fn test_increment_counter() {
         let sender = start().await;
-        
+
         increment_counter(&sender).await;
         let count = get_counter(&sender).await;
         assert_eq!(count, 1);
@@ -90,11 +90,11 @@ mod tests {
     #[tokio::test]
     async fn test_multiple_increments() {
         let sender = start().await;
-        
+
         for _ in 0..5 {
             increment_counter(&sender).await;
         }
-        
+
         let count = get_counter(&sender).await;
         assert_eq!(count, 5);
     }
@@ -102,7 +102,7 @@ mod tests {
     #[tokio::test]
     async fn test_concurrent_increments() {
         let sender = start().await;
-        
+
         let mut handles = Vec::new();
         for _ in 0..10 {
             let sender_clone = sender.clone();
@@ -111,11 +111,11 @@ mod tests {
             });
             handles.push(handle);
         }
-        
+
         for handle in handles {
             handle.await.unwrap();
         }
-        
+
         let count = get_counter(&sender).await;
         assert_eq!(count, 10);
     }
@@ -123,20 +123,18 @@ mod tests {
     #[tokio::test]
     async fn test_concurrent_gets() {
         let sender = start().await;
-        
+
         increment_counter(&sender).await;
         increment_counter(&sender).await;
         increment_counter(&sender).await;
-        
+
         let mut handles = Vec::new();
         for _ in 0..5 {
             let sender_clone = sender.clone();
-            let handle = tokio::spawn(async move {
-                get_counter(&sender_clone).await
-            });
+            let handle = tokio::spawn(async move { get_counter(&sender_clone).await });
             handles.push(handle);
         }
-        
+
         for handle in handles {
             let count = handle.await.unwrap();
             assert_eq!(count, 3);
@@ -146,16 +144,16 @@ mod tests {
     #[tokio::test]
     async fn test_mixed_operations() {
         let sender = start().await;
-        
+
         increment_counter(&sender).await;
         let count1 = get_counter(&sender).await;
         assert_eq!(count1, 1);
-        
+
         increment_counter(&sender).await;
         increment_counter(&sender).await;
         let count2 = get_counter(&sender).await;
         assert_eq!(count2, 3);
-        
+
         increment_counter(&sender).await;
         let count3 = get_counter(&sender).await;
         assert_eq!(count3, 4);
@@ -168,12 +166,12 @@ mod tests {
             increment_counter(&temp_sender).await;
             temp_sender
         };
-        
+
         sleep(Duration::from_millis(10)).await;
-        
+
         let count = get_counter(&sender).await;
         assert_eq!(count, 1);
-        
+
         increment_counter(&sender).await;
         let count = get_counter(&sender).await;
         assert_eq!(count, 2);
@@ -183,10 +181,10 @@ mod tests {
     async fn test_get_counter_with_closed_actor() {
         let sender = start().await;
         increment_counter(&sender).await;
-        
+
         drop(sender);
         sleep(Duration::from_millis(10)).await;
-        
+
         let sender2 = start().await;
         let count = get_counter(&sender2).await;
         assert_eq!(count, 0);

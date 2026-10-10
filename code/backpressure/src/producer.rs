@@ -17,7 +17,9 @@ pub async fn producer_task(id: usize, tx: flume::Sender<u64>, report: flume::Sen
         let elapsed_seconds = start.elapsed().as_secs_f32();
         if elapsed_seconds >= 0.1 {
             let messages_per_second = count as f32 / elapsed_seconds;
-            let _ = report.send_async(Report::Producer(id, messages_per_second)).await;
+            let _ = report
+                .send_async(Report::Producer(id, messages_per_second))
+                .await;
             count = 0;
             start = std::time::Instant::now();
         }

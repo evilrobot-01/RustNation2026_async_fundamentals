@@ -9,7 +9,6 @@ pub mod hello_world {
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
 
-
 #[derive(Debug)] // I removed default
 pub struct MyGreeter {
     my_actor: Sender<SharedStateCommand>, // Add the layer to the service struct
